@@ -232,6 +232,7 @@ struct kvm {
 		struct list_head  items;
 	} irqfds;
 	struct list_head ioeventfds;
+	struct list_head eoi_eventfds;
 #endif
 	struct kvm_vm_stat stat;
 	struct kvm_arch arch;
@@ -665,6 +666,7 @@ int kvm_irqfd(struct kvm *kvm, int fd, int gsi, int flags);
 void kvm_irqfd_release(struct kvm *kvm);
 void kvm_irq_routing_update(struct kvm *, struct kvm_irq_routing_table *);
 int kvm_ioeventfd(struct kvm *kvm, struct kvm_ioeventfd *args);
+int kvm_eoi_eventfd(struct kvm *kvm, struct kvm_eoi *eoi);
 
 #else
 
@@ -690,6 +692,10 @@ static inline int kvm_ioeventfd(struct kvm *kvm, struct kvm_ioeventfd *args)
 	return -ENOSYS;
 }
 
+static inline int kvm_eoi_eventfd(struct kvm *kvm, struct kvm_eoi *eoi)
+{
+	return -ENOSYS;
+}
 #endif /* CONFIG_HAVE_KVM_EVENTFD */
 
 #ifdef CONFIG_KVM_APIC_ARCHITECTURE

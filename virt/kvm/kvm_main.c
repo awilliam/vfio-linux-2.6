@@ -1904,6 +1904,14 @@ static long kvm_vm_ioctl(struct file *filp,
 		mutex_unlock(&kvm->lock);
 		break;
 #endif
+	case KVM_EOI_EVENTFD: {
+		struct kvm_eoi eoi;
+		r = -EFAULT;
+		if (copy_from_user(&eoi, argp, sizeof eoi))
+			goto out;
+		r = kvm_eoi_eventfd(kvm, &eoi);
+		break;
+	}
 	default:
 		r = kvm_arch_vm_ioctl(filp, ioctl, arg);
 		if (r == -ENOTTY)
